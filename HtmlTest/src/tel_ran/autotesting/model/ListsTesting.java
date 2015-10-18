@@ -20,6 +20,7 @@ public class ListsTesting extends Task {
 	private static final String LIST_ITEM = "li";
 	private static final int MIN_LIST_ITEMS = 3;
 	private static final int MAX_LIST_ITEMS = 6;
+	private static final int LIMIT_LIST_ITEMS = 20;
 	private static final Random RND = new Random(System.currentTimeMillis());
 	private static final String CONDITION_TEXT = "Find and correct the mistake.";
 	private static final String COMMENT_NODE = "#comment";
@@ -29,6 +30,24 @@ public class ListsTesting extends Task {
 	
 	public ListsTesting() {
 		listType = getAnyValue(LIST_TYPES);
+		nItems = MIN_LIST_ITEMS + RND.nextInt(MAX_LIST_ITEMS-MIN_LIST_ITEMS+1);
+		setCondition(CONDITION_TEXT);
+		genereateData();
+	}
+
+	public ListsTesting(String listType, int nItems) {
+		for(String lt:LIST_TYPES)
+			if(listType.equalsIgnoreCase(lt)) {
+				this.listType = lt;
+				break;
+			}
+		if(this.listType == null) {
+			listType = getAnyValue(LIST_TYPES);
+		}
+		if(nItems < MIN_LIST_ITEMS)
+			this.nItems = MIN_LIST_ITEMS;
+		else if (nItems > LIMIT_LIST_ITEMS)
+			this.nItems = LIMIT_LIST_ITEMS;
 		setCondition(CONDITION_TEXT);
 		genereateData();
 	}
@@ -69,7 +88,6 @@ public class ListsTesting extends Task {
 		Element list = body.appendElement(listType);
 		if(listType == "ol")
 			list.attr("start", ((Integer) RND.nextInt(MAX_LIST_ITEMS)).toString());
-		nItems = MIN_LIST_ITEMS + RND.nextInt(MAX_LIST_ITEMS-MIN_LIST_ITEMS+1);
 		for(int i = 0; i < nItems; i++) {
 			Element item = list.appendElement(LIST_ITEM);
 			item.text(lorem.getWords(1, MAX_LIST_ITEMS));

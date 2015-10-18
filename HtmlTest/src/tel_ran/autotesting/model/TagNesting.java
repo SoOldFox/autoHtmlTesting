@@ -19,8 +19,6 @@ public class TagNesting extends Task{
 												{"a","b"},{"a","i"}};
 	private String tag0;
 	private String tag1;
-	private String taskPattern;
-	private String replacement;
 	
 	public TagNesting() {
 		setRandomTags();
@@ -36,10 +34,9 @@ public class TagNesting extends Task{
 	}
 	
 	public void genereateData() {
-		String clearData = generateClearDoc().html();
-		matching = clearData;//getMatchIng(clearData);
-		prepareReplacement();
-		data = clearData.replaceFirst(taskPattern, replacement);
+		Document clearDoc = generateClearDoc(); 
+		matching = clearDoc.html();
+		data = generateTaskData(matching);
 	}
 
 	private Document generateClearDoc() {
@@ -84,9 +81,10 @@ public class TagNesting extends Task{
 		return true;
 	}
 
-	private void prepareReplacement() {
-		taskPattern = "</" + tag1 + ">\\s*</" + tag0 + ">";
-		replacement = "</" + tag0 + "></" + tag1 + ">";
+	private String generateTaskData(String clearString) {
+		String taskPattern = "</" + tag1 + ">\\s*</" + tag0 + ">";
+		String replacement = "</" + tag0 + "></" + tag1 + ">";
+		return clearString.replaceFirst(taskPattern,replacement);
 	}
 
 	private void setCondition(String conditionText) {
